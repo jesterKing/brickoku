@@ -7,10 +7,16 @@ main = do
 	-- get command-line arguments
 	args <- getArgs
 
+	defgen <- newStdGen
+
  -- read model count from arguments, defaulting to 1 if empty
 	let [seed, count]
 		| length args == 2 = [read (args !! 0) :: Int, read (args !! 1) :: Int]
-		| otherwise = [0, 1]
+		| length args == 1 = [a, read (args !! 0) :: Int]
+		| otherwise = [a, b]
+			where
+				(a, defgen2) = next defgen
+				b = 1
 
 	-- create the models
 	let rgen = mkStdGen ( seed )
@@ -22,3 +28,4 @@ main = do
 	print unique_models
 	print $ length models
 	print $ length unique_models
+	print $ seed

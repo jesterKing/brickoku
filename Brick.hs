@@ -75,25 +75,29 @@ modelBlockLocations [] = []
 modelBlockLocations (x:xs) = modelBlockLocations xs ++ blockLocations x
 
 -- Return a random location from a list of locations
-pickConnection :: Int -> [Location] -> Location
-pickConnection _ [] = Location 1 1 1
-pickConnection seed xs = xs !! ( fst $ randomR(0, length xs - 1) (mkStdGen ( seed * 1337 ) ) )
+pickConnection :: StdGen -> [Location] -> (Location, StdGen)
+pickConnection rgen [] = (Location 1 1 1 , rgen)
+pickConnection rgen xs = (xs !! pos , rgen2)
+	where
+		(pos, rgen2) = randomR (0, length xs-1) rgen
 
 -- Generate a model of n bricks into list x
-model' :: (Num i, Ord i) => i -> Int -> [Brick] -> [Brick]
-model' n seed x
+model' :: (Num i, Ord i) => i -> StdGen -> [Brick] -> [Brick]
+model' n rgen x
 	| n < 0 = []
-	| otherwise = x ++ model' (n-1) seed [brick]
+	| otherwise = x ++ model' (n-1) rgen2 [brick]
 		where
 			blockS = Set.fromList $ modelBlockLocations x
 			allS = Set.fromList $ modelLocations x
 			availableL = Set.toList $ ( Set.difference allS blockS )
-			location = pickConnection seed availableL
+			(location, rgen2) = pickConnection rgen availableL
 			brick = Brick $ location
 
 -- Generate c models of n bricks into list m of Models
-models' :: Int -> Int -> Int -> [Brick] -> [Model]
-models' from to brickcount mlist
-	| to <= from = []
-	| otherwise = [model' brickcount to []] ++ models' from (to-1) brickcount mlist
+models' :: StdGen -> Int -> Int -> [Brick] -> [Model]
+models' rgen count brickcount mlist
+	| count <= 0 = []
+	| otherwise = [model' brickcount rgen []] ++ models' rgen2 (count-1) brickcount mlist
+		where
+			(x, rgen2) = next rgen
 

@@ -1,7 +1,7 @@
 module Brick ( models' ) where
 
-import qualified Data.Set as Set
-import System.Random
+import Data.Set ( fromList, toList, difference )
+import System.Random ( StdGen, randomR, next )
 
 -- data type holding coordinates
 data Location = Location {x :: Int, y :: Int, z :: Int}
@@ -87,9 +87,9 @@ model' n rgen x
 	| n < 0 = []
 	| otherwise = x ++ model' (n-1) rgen2 [brick]
 		where
-			blockS = Set.fromList $ modelBlockLocations x
-			allS = Set.fromList $ modelLocations x
-			availableL = Set.toList $ ( Set.difference allS blockS )
+			blockS = fromList $ modelBlockLocations x
+			allS = fromList $ modelLocations x
+			availableL = toList $ ( difference allS blockS )
 			(location, rgen2) = pickConnection rgen availableL
 			brick = Brick $ location
 

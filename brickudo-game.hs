@@ -1,7 +1,7 @@
 import Brick
-import Data.Set
-import System.Environment( getArgs )
-import System.Random
+import Data.Set ( fromList, toList )
+import System.Environment ( getArgs )
+import System.Random ( newStdGen, mkStdGen, next )
 
 main = do
 	-- get command-line arguments

@@ -100,3 +100,8 @@ model' n r x
 			location = giveLocation r availableL
 			brick = Brick $ location
 
+models' :: Int -> Int -> [Brick] -> [Model]
+models' c n m
+	| c <= 0 = []
+	| otherwise = [model' n c []] ++ models' (c-1) n m
+

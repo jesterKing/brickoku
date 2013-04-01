@@ -83,19 +83,20 @@ modelBlockLocations :: [Brick] -> [Location]
 modelBlockLocations [] = []
 modelBlockLocations (x:xs) = modelBlockLocations xs ++ blockLocations x
 
--- Return a location from a list of locations
-giveLocation :: [Location] -> Location
-giveLocation [] = Location 1 1 1
-giveLocation xs = xs !! ( fst $ R.randomR(0, length xs - 1) (R.mkStdGen 1) )
+-- Return a random location from a list of locations
+giveLocation :: Int -> [Location] -> Location
+giveLocation _ [] = Location 1 1 1
+giveLocation r xs = xs !! ( fst $ R.randomR(0, length xs - 1) (R.mkStdGen r) )
 
 -- Generate a model of n bricks, put in the list given
-model' :: (Num i, Ord i) => i -> [Brick] -> [Brick]
-model' n x
+model' :: (Num i, Ord i) => i -> Int -> [Brick] -> [Brick]
+model' n r x
 	| n < 0 = []
-	| otherwise = x ++ model' (n-1) [brick]
+	| otherwise = x ++ model' (n-1) r [brick]
 		where
 			blockS = Set.fromList $ modelBlockLocations x
 			allS = Set.fromList $ modelLocations x
 			availableL = Set.toList $ ( Set.difference allS blockS )
-			location = giveLocation availableL
+			location = giveLocation r availableL
 			brick = Brick $ location
+

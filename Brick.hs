@@ -97,21 +97,3 @@ models' c n m
 	| c <= 0 = []
 	| otherwise = [model' n c []] ++ models' (c-1) n m
 
-
--- some test stuff
-b1 = Brick $ Location 1 1 1
-b2 = Brick $ Location 1 1 3
-b3 = Brick $ Location 1 2 1
-b1all = connectionPoints b1
-b2all = connectionPoints b2
-b3all = connectionPoints b3
-
-b1set = Set.fromList ( b1all ++ b2all ++ b3all )
---b2set = Set.fromList b2all
---b3set = Set.fromList b3all
-b1block = Set.fromList ( blockLocations b1 ++ blockLocations b2 ++ blockLocations b3 )
---b2block = Set.fromList $ blockLocations b2
---b3block = Set.fromList $ blockLocations b3
-
-totfree = length $ Set.toList ( Set.difference b1set b1block )
-

@@ -1,7 +1,7 @@
 module Brick ( models' ) where
 
 import qualified Data.Set as Set
-import qualified System.Random as R
+import System.Random
 
 -- data type holding coordinates
 data Location = Location {x :: Int, y :: Int, z :: Int}
@@ -77,7 +77,7 @@ modelBlockLocations (x:xs) = modelBlockLocations xs ++ blockLocations x
 -- Return a random location from a list of locations
 pickConnection :: Int -> [Location] -> Location
 pickConnection _ [] = Location 1 1 1
-pickConnection seed xs = xs !! ( fst $ R.randomR(0, length xs - 1) (R.mkStdGen seed) )
+pickConnection seed xs = xs !! ( fst $ randomR(0, length xs - 1) (mkStdGen ( seed * 1337 ) ) )
 
 -- Generate a model of n bricks into list x
 model' :: (Num i, Ord i) => i -> Int -> [Brick] -> [Brick]

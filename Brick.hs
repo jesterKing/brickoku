@@ -1,3 +1,5 @@
+module Brick ( models' ) where
+
 import qualified Data.Set as Set
 import qualified System.Random as R
 

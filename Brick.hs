@@ -92,8 +92,8 @@ model' n seed x
 			brick = Brick $ location
 
 -- Generate c models of n bricks into list m of Models
-models' :: Int -> Int -> [Brick] -> [Model]
-models' c n m
-	| c <= 0 = []
-	| otherwise = [model' n c []] ++ models' (c-1) n m
+models' :: Int -> Int -> Int -> [Brick] -> [Model]
+models' from to brickcount mlist
+	| to <= from = []
+	| otherwise = [model' brickcount to []] ++ models' from (to-1) brickcount mlist
 

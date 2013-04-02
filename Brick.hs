@@ -91,7 +91,7 @@ model' n rgen x
 			allS = fromList $ modelLocations x
 			availableL = toList $ ( difference allS blockS )
 			(location, rgen2) = pickConnection rgen availableL
-			brick = Brick $ location
+			brick = Brick location
 
 -- Generate c models of n bricks into list m of Models
 models' :: StdGen -> Int -> Int -> [Brick] -> [Model]

@@ -102,9 +102,9 @@ model' n rgen m
 
 -- Generate c models of n bricks into list m of Models
 models' :: StdGen -> Int -> Int -> Model -> [Model]
-models' rgen count brickcount mlist
+models' rgen count brickcount ms
 	| count <= 0 = []
-	| otherwise = [model' brickcount rgen []] ++ models' rgen2 (count-1) brickcount mlist
+	| otherwise = [model' brickcount rgen []] ++ models' rgen2 (count-1) brickcount ms
 		where
 			(x, rgen2) = next rgen
 

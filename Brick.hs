@@ -61,17 +61,17 @@ blockLocations brick = makeConnectionPoints 0 brick
 
 
 -- Give the list origins for a list of bricks
-origs :: [Brick] -> [Location]
+origs :: Model -> [Location]
 origs [] = []
 origs bs = [loc b | b <- bs]
 
 -- Give all the potential locations around given bricks
-modelLocations :: [Brick] -> [Location]
+modelLocations :: Model -> [Location]
 modelLocations [] = []
 modelLocations (x:xs) = modelLocations xs ++ connectionPoints x
 
 -- Give all the blocking locations of given bricks
-modelBlockLocations :: [Brick] -> [Location]
+modelBlockLocations :: Model -> [Location]
 modelBlockLocations [] = []
 modelBlockLocations (x:xs) = modelBlockLocations xs ++ blockLocations x
 
@@ -83,10 +83,10 @@ pickConnection rgen xs = (xs !! pos , rgen2)
 		(pos, rgen2) = randomR (0, length xs-1) rgen
 
 -- Generate a model of n bricks into list x
-model' :: (Num i, Ord i) => i -> StdGen -> [Brick] -> [Brick]
+model' :: (Num i, Ord i) => i -> StdGen -> Model -> Model
 model' n rgen x
 	| n < 0 = []
-	| otherwise = x ++ model' (n-1) rgen2 [brick]
+	| otherwise = model' (n-1) rgen2 [brick] ++ x
 		where
 			blockS = fromList $ modelBlockLocations x
 			allS = fromList $ modelLocations x
@@ -95,7 +95,7 @@ model' n rgen x
 			brick = Brick location
 
 -- Generate c models of n bricks into list m of Models
-models' :: StdGen -> Int -> Int -> [Brick] -> [Model]
+models' :: StdGen -> Int -> Int -> Model -> [Model]
 models' rgen count brickcount mlist
 	| count <= 0 = []
 	| otherwise = [model' brickcount rgen []] ++ models' rgen2 (count-1) brickcount mlist

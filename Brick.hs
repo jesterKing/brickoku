@@ -19,7 +19,7 @@ type Model = [Brick]
 -- are all within the first quadrant
 okQuadrant :: [Location] -> [Location]
 okQuadrant [] = error "empty list"
-okQuadrant xs = [a | a <- xs, z a > 0 && x a > 0 && y a > 0]
+okQuadrant xs = [a | a <- xs, z a >= 0] -- && x a >= 0 && y a >= 0]
 
 -- base locations contain X and Y of brick openings
 -- from these connection points are calculated

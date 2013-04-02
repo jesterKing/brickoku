@@ -82,17 +82,23 @@ pickConnection rgen xs = (xs !! pos , rgen2)
 	where
 		(pos, rgen2) = randomR (0, length xs-1) rgen
 
+pickBrick :: StdGen -> Model -> (Brick, StdGen)
+pickBrick rgen m = (brick, rgen2)
+	where
+		blockS = fromList $ modelBlockLocations m
+		allS = fromList $ modelLocations m
+		availableL = toList $ difference allS blockS
+		(location, rgen2) = pickConnection rgen availableL
+		brick = Brick location
+		
+
 -- Generate a model of n bricks into list x
 model' :: (Num i, Ord i) => i -> StdGen -> Model -> Model
 model' n rgen x
 	| n < 0 = []
-	| otherwise = model' (n-1) rgen2 [brick] ++ x
+	| otherwise = x ++ model' (n-1) rgen2 [brick]
 		where
-			blockS = fromList $ modelBlockLocations x
-			allS = fromList $ modelLocations x
-			availableL = toList $ difference allS blockS
-			(location, rgen2) = pickConnection rgen availableL
-			brick = Brick location
+			(brick, rgen2) = pickBrick rgen x
 
 -- Generate c models of n bricks into list m of Models
 models' :: StdGen -> Int -> Int -> Model -> [Model]

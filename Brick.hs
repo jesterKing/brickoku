@@ -1,5 +1,7 @@
 module Brick ( models', renderModel, putModel ) where
 
+import Debug.Trace
+
 import Data.Set ( fromList, toList, difference )
 import Data.List ( intercalate )
 import System.Random ( StdGen, randomR, next )
@@ -83,12 +85,14 @@ pickConnection rgen xs = (xs !! pos , rgen2)
 		(pos, rgen2) = randomR (0, length xs-1) rgen
 
 pickBrick :: StdGen -> Model -> (Brick, StdGen)
-pickBrick rgen m = (brick, rgen2)
+pickBrick rgen m = trace("----") (brick, rgen2)
 	where
-		blockS = fromList $ modelBlockLocations m
-		allS = fromList $ modelLocations m
+		block = trace("model: " ++ show m ++ "\n") $ modelBlockLocations m
+		blockS = trace("blockLocations: " ++ show block ++ "\n") $ fromList block
+		all = modelLocations m
+		allS = trace("allLocations: " ++ show all ++ "\n") $ fromList all
 		availableL = toList $ difference allS blockS
-		(location, rgen2) = pickConnection rgen availableL
+		(location, rgen2) = trace ("pickConnection in pickBrick " ++ show availableL ++ "\n") pickConnection rgen availableL
 		brick = Brick location
 		
 

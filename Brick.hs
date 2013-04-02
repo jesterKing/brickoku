@@ -90,7 +90,7 @@ model' n rgen x
 		where
 			blockS = fromList $ modelBlockLocations x
 			allS = fromList $ modelLocations x
-			availableL = toList $ ( difference allS blockS )
+			availableL = toList $ difference allS blockS
 			(location, rgen2) = pickConnection rgen availableL
 			brick = Brick location
 

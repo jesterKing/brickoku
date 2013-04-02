@@ -1,6 +1,7 @@
-module Brick ( models' ) where
+module Brick ( models', renderModel, putModel ) where
 
 import Data.Set ( fromList, toList, difference )
+import Data.List ( intercalate )
 import System.Random ( StdGen, randomR, next )
 
 -- data type holding coordinates
@@ -101,3 +102,12 @@ models' rgen count brickcount mlist
 		where
 			(x, rgen2) = next rgen
 
+renderModel :: Model -> String
+renderModel m = "[" ++ bricks m ++ "]"
+	where
+		bricks [] = ""
+		bricks ls = intercalate ", " (map renderBrick ls)
+		renderBrick b = "(" ++ ( show $ x $ loc b ) ++ ", " ++ ( show $ y $ loc b ) ++ ", " ++ ( show $ z $ loc b ) ++ ")"
+
+putModel :: Model -> IO ()
+putModel m = putStrLn ( renderModel m )

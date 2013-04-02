@@ -29,3 +29,4 @@ main = do
 	print $ length models
 	print $ length unique_models
 	print $ seed
+	putModel $ head unique_models

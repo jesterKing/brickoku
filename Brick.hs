@@ -94,11 +94,11 @@ pickBrick rgen m = (brick, rgen2)
 
 -- Generate a model of n bricks into list x
 model' :: (Num i, Ord i) => i -> StdGen -> Model -> Model
-model' n rgen x
+model' n rgen m
 	| n < 0 = []
-	| otherwise = x ++ model' (n-1) rgen2 [brick]
+	| otherwise = m ++ model' (n-1) rgen2 [brick]
 		where
-			(brick, rgen2) = pickBrick rgen x
+			(brick, rgen2) = pickBrick rgen m
 
 -- Generate c models of n bricks into list m of Models
 models' :: StdGen -> Int -> Int -> Model -> [Model]

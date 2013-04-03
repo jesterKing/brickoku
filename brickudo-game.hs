@@ -30,3 +30,4 @@ main = do
 	print $ length unique_models
 	print $ seed
 	putModel $ head unique_models
+	sequence [ putModel m | m <- unique_models ]

@@ -141,11 +141,11 @@ models' rgen count brickcount ms
 			(x, rgen2) = next rgen
 
 renderModel :: Model -> String
-renderModel m = "[" ++ bricks m ++ "]"
+renderModel m = "[\n" ++ bricks m ++ "\n]"
 	where
 		bricks [] = ""
-		bricks ls = intercalate ", " (map renderBrick ls)
-		renderBrick b = "(" ++ ( show $ x $ loc b ) ++ ", " ++ ( show $ y $ loc b ) ++ ", " ++ ( show $ z $ loc b ) ++ ")"
+		bricks ls = intercalate ",\n" (map renderBrick ls)
+		renderBrick b = "\t(" ++ ( show $ x $ loc b ) ++ ", " ++ ( show $ y $ loc b ) ++ ", " ++ ( show $ z $ loc b ) ++ ")"
 
 putModel :: Model -> IO ()
 putModel m = putStrLn ( renderModel m )

@@ -106,11 +106,37 @@ model' n rgen m
 		where
 			(brick, rgen2) = nextBrick rgen m
 
+
+mmodel :: StdGen -> Model
+mmodel rgen =
+	let
+		(m1, rgen1) = modelNextBrick rgen [Brick $ Location 1 1 1] 
+		(m2, rgen2) = modelNextBrick rgen1 m1
+		(m3, rgen3) = modelNextBrick rgen2 m2
+		(m4, rgen4) = modelNextBrick rgen3 m3
+		(m5, rgen5) = modelNextBrick rgen4 m4
+		(m6, rgen6) = modelNextBrick rgen5 m5
+		(m7, rgen7) = modelNextBrick rgen6 m6
+		(m8, rgen8) = modelNextBrick rgen7 m7
+		(m9, rgen9) = modelNextBrick rgen8 m8
+	in m9
+
+mmodel' :: StdGen -> Model -> Int -> Model
+mmodel' rgen [] n = mmodel' rgen [Brick $ Location 1 1 1] (n - 1)
+mmodel' rgen m n = do
+	let (m1, ngen) = modelNextBrick rgen m
+	let n' = n - 1
+	if n' > 0
+		then
+			mmodel' ngen m1 n'
+		else
+			reverse m1
+
 -- Generate c models of n bricks into list m of Models
 models' :: StdGen -> Int -> Int -> Model -> [Model]
 models' rgen count brickcount ms
 	| count <= 0 = []
-	| otherwise = [model' brickcount rgen []] ++ models' rgen2 (count-1) brickcount ms
+	| otherwise = [mmodel' rgen [] brickcount] ++ models' rgen2 (count-1) brickcount ms
 		where
 			(x, rgen2) = next rgen
 

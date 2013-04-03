@@ -92,7 +92,11 @@ nextBrick rgen m = (brick, rgen2)
 		availableL = toList $ difference allS blockS
 		(location, rgen2) = pickConnection rgen availableL
 		brick = Brick location
-		
+
+modelNextBrick :: StdGen -> Model -> (Model, StdGen)
+modelNextBrick rgen m = (brick:m, rgen2)
+	where
+		(brick, rgen2) = nextBrick rgen m
 
 -- Generate a model of n bricks into list x
 model' :: (Num i, Ord i) => i -> StdGen -> Model -> Model

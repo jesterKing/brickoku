@@ -48,10 +48,10 @@ makeConnectionPoints n brick = map (\(a, b) -> Location (a+x') (b+y') (n+z')) ba
 
 -- Give a list of connection points on the top of a brick
 topConnectionPoints :: Brick -> [Location]
-topConnectionPoints brick = okQuadrant $ makeConnectionPoints 2 brick
+topConnectionPoints brick = makeConnectionPoints 2 brick
 -- Give a list of connection points on the bottom of a brick
 bottomConnectionPoints :: Brick -> [Location]
-bottomConnectionPoints brick = okQuadrant $ makeConnectionPoints (-2) brick
+bottomConnectionPoints brick = makeConnectionPoints (-2) brick
 
 -- give a list of all connection points for a brick
 connectionPoints :: Brick -> [Location]

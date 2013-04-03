@@ -98,7 +98,7 @@ nextBrick rgen m = (brick, rgen2)
 model' :: (Num i, Ord i) => i -> StdGen -> Model -> Model
 model' n rgen m
 	| n < 0 = []
-	| otherwise = m ++ model' (n-1) rgen2 [brick]
+	| otherwise = m ++ model' (n-1) rgen2 (brick:m)
 		where
 			(brick, rgen2) = nextBrick rgen m
 

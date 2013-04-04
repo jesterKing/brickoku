@@ -56,10 +56,13 @@ But if you rotate the model 90 degrees counter-clockwise you end up with:
 >
 > 000 0000 0011 001 (25d)
 
+Challenge
+---------
+
 With this information you should be able to solve the puzzle with the following
 10 numbers:
 
-122 2769 2769 2809 3369 3369 3449 4009 4049 6016
+<b>122 2769 2769 2809 3369 3369 3449 4009 4049 6016</b>
 
 
 

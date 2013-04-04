@@ -1,4 +1,4 @@
-module Brick ( models', renderModel, putModel ) where
+module Brick ( models', renderModel ) where
 
 import Data.Set ( fromList, toList, difference )
 import Data.List ( intercalate )
@@ -82,6 +82,7 @@ pickConnection rgen xs = (xs !! pos , rgen2)
 	where
 		(pos, rgen2) = randomR (0, length xs-1) rgen
 
+-- Pick the next brick for Model.
 nextBrick :: StdGen -> Model -> (Brick, StdGen)
 nextBrick rgen m = (brick, rgen2)
 	where
@@ -93,6 +94,7 @@ nextBrick rgen m = (brick, rgen2)
 		(location, rgen2) = pickConnection rgen availableL
 		brick = Brick location
 
+-- Grow Model with the next brick.
 modelNextBrick :: StdGen -> Model -> (Model, StdGen)
 modelNextBrick rgen m = (brick:m, rgen2)
 	where
@@ -107,6 +109,7 @@ model' n rgen m
 			(brick, rgen2) = nextBrick rgen m
 
 
+-- Create one Model consisting of 10 bricks
 mmodel :: StdGen -> Model
 mmodel rgen =
 	let
@@ -121,6 +124,7 @@ mmodel rgen =
 		(m9, rgen9) = modelNextBrick rgen8 m8
 	in m9
 
+-- Monad for creating a series of models
 mmodel' :: StdGen -> Model -> Int -> Model
 mmodel' rgen [] n = mmodel' rgen [Brick $ Location 1 1 1] (n - 1)
 mmodel' rgen m n = do
@@ -140,12 +144,10 @@ models' rgen count brickcount ms
 		where
 			(x, rgen2) = next rgen
 
+-- Generate a string representation of a Model
 renderModel :: Model -> String
 renderModel m = "[\n" ++ bricks m ++ "\n]"
 	where
 		bricks [] = ""
 		bricks ls = intercalate ",\n" (map renderBrick ls)
 		renderBrick b = "\t(" ++ ( show $ x $ loc b ) ++ ", " ++ ( show $ y $ loc b ) ++ ", " ++ ( show $ z $ loc b ) ++ ")"
-
-putModel :: Model -> IO ()
-putModel m = putStrLn ( renderModel m )

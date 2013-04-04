@@ -1,5 +1,6 @@
 import Brick
 import Data.Set ( fromList, toList )
+import Data.List ( intercalate )
 import System.Environment ( getArgs )
 import System.Random ( newStdGen, mkStdGen, next )
 
@@ -25,9 +26,7 @@ main = do
 	let unique_models = toList smodels
 
 	-- output the models
-	print unique_models
-	print $ length models
-	print $ length unique_models
-	print $ seed
-	putModel $ head unique_models
-	sequence [ putModel m | m <- unique_models ]
+	putStrLn ("seed = " ++ show(seed))
+	-- sequence [ putModel m | m <- unique_models ]
+	let ls = intercalate ",\n" (map renderModel unique_models)
+	putStrLn ("ls = [" ++ ls ++ "]")

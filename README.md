@@ -14,25 +14,25 @@ ghc -o brickodu-game -O brickodu-game.hs
 Usage
 =====
 
-	./brickodu-game [[seed] count]
+	./brickodu-game [[[seed] brick_count] count]
 
 When `seed` is not specified a random seed will be picked. `count` tells how many model iterations will be created.
 
-## a random model
+## a random model with 10 bricks
 
 	./brickodu-game
 
-## 5 models with a random seed
+## 5 models with a random seed, 10 bricks
 
 	./brickodu-game 5
 
-## 1 model with a specific seed
+## 1 model with a specific seed, 10 bricks
 
-	./brickodu-game 1337 1
+	./brickodu-game 1337 10 1
 
-## 5 models with a specific seed
+## 5 models with a specific seed, 20 bricks
 
-	./brickodu-game 7331 5
+	./brickodu-game 7331 20 5
 
 Credits
 =======

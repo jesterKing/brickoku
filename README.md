@@ -1,7 +1,7 @@
-Brickudo
+Brickodu
 ========
 
-This is code related to the Brickudo game, an orginal puzzle game developed by 
+This is code related to the Brickodu game, an orginal puzzle game developed by 
 Nathan Letwory.
 
 This project also serves as a personal learning platform for the Haskell language.
@@ -9,30 +9,30 @@ This project also serves as a personal learning platform for the Haskell languag
 Compiling
 =========
 
-ghc -o brickudo-game -O brickudo-game.hs
+ghc -o brickodu-game -O brickodu-game.hs
 
 Usage
 =====
 
-	./brickudo-game [[seed] count]
+	./brickodu-game [[seed] count]
 
 When `seed` is not specified a random seed will be picked. `count` tells how many model iterations will be created.
 
 ## a random model
 
-	./brickudo-game
+	./brickodu-game
 
 ## 5 models with a random seed
 
-	./brickudo-game 5
+	./brickodu-game 5
 
 ## 1 model with a specific seed
 
-	./brickudo-game 1337 1
+	./brickodu-game 1337 1
 
 ## 5 models with a specific seed
 
-	./brickudo-game 7331 5
+	./brickodu-game 7331 5
 
 Credits
 =======

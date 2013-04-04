@@ -17,6 +17,10 @@ to bottom-right, top-left to top-right: 1 2 3 4. The bottom connection points
 are numbered the same: bottom connection 1 is in the same corner as top
 connection 1.
 
+	3    4
+	
+	1    2
+
 The bit representation of a number will have 14 bits used. The lower 7 bits are
 used for the bottom part of a brick, the upper 7 bits for the top part of a
 brick. The 3 most significant bits encode the amount of bricks that are
@@ -34,6 +38,7 @@ So the form is:
 Two bricks right on top of each other will thus yield two bitstrings:
 
 > 001 1111 0000 000 (3968d)
+>
 > 000 0000 1111 001 (121d)
 
 Note that if you rotate a model 90 degrees you'll end up with different
@@ -42,11 +47,13 @@ if you have a brick half on top to the right side of the lower brick you'd
 have:
 
 > 001 1010 0000 000 (3328d)
+>
 > 000 0000 0101 001 (41d)
 
 But if you rotate the model 90 degrees counter-clockwise you end up with:
 
 > 001 1100 0000 000 (3584d)
+>
 > 000 0000 0011 001 (25d)
 
 With this information you should be able to solve the puzzle with the following

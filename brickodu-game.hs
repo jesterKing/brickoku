@@ -26,14 +26,12 @@ main = do
 	let models = models' rgen model_count brick_count []
 	let smodels = fromList models
 	let unique_models = toList smodels
-	let ls = intercalate ",\n" (map renderModel unique_models)
-	let is = ["(\n\t" ++ show (vectorsModel m) ++
+	let ls = ["(\n\t" ++ show (vectorsModel m) ++
 						",\n\t" ++ show (numbersModel m) ++
 						",\n\t" ++ show (bitStringsModel m) ++ "\n)" | m <- unique_models]
 
 	-- output the models
 	putStrLn ("seed = " ++ show(seed))
 	putStrLn ("bricks_per_model = " ++ show(brick_count))
-	-- sequence [ putModel m | m <- unique_models ]
-	putStrLn ("ls = [" ++ ls ++ "]\n")
-	putStrLn ("is = [\n" ++ (intercalate ",\n" is) ++ "]\n")
+	putStrLn ("model_count = " ++ show(model_count))
+	putStrLn ("ls = [\n" ++ (intercalate ",\n" ls) ++ "]\n")

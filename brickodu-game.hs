@@ -12,7 +12,8 @@ main = do
 
  -- read model count from arguments, defaulting to 1 if empty
 	let [seed, brick_count, model_count]
-		| length args == 3 = [read (args !! 0) :: Int, read (args !! 1) :: Int, read (args !! 2) :: Int]
+		| length args == 3 = [read (args !! 0) :: Int, read (args !! 1) :: Int,
+													read (args !! 2) :: Int]
 		| length args == 2 = [c, read (args !! 0) :: Int, read (args !! 1) :: Int]
 		| length args == 1 = [c, b, read (args !! 0) :: Int]
 		| otherwise = [c, b, a]
@@ -23,12 +24,10 @@ main = do
 
 	-- create the models
 	let rgen = mkStdGen ( seed )
-	let models = models' rgen model_count brick_count []
-	let smodels = fromList models
-	let unique_models = toList smodels
-	let ls = ["(\n\t" ++ show (vectorsModel m) ++
-						",\n\t" ++ show (numbersModel m) ++
-						",\n\t" ++ show (bitStringsModel m) ++ "\n)" | m <- unique_models]
+	let ms = models rgen model_count brick_count []
+	let ls = ["(\n\t" ++ show (vectors m) ++
+						",\n\t" ++ show (numbers m) ++
+						",\n\t" ++ show (bitStrings m) ++ "\n)" | m <- ms ]
 
 	-- output the models
 	putStrLn ("seed = " ++ show(seed))

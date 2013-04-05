@@ -1,8 +1,10 @@
-module Brick ( models', renderModel ) where
+module Brick ( models', origs, renderModel, vectorsModel, numbersModel, bitStringsModel ) where
 
-import Data.Set ( fromList, toList, difference )
-import Data.List ( intercalate )
-import System.Random ( StdGen, randomR, next )
+import Data.Set ( fromList, toList, difference, intersection )
+import Data.List ( intercalate, sort )
+import Data.Bits ( shift, testBit )
+import Data.Int ( Int16 )
+import System.Random ( mkStdGen, StdGen, randomR, next )
 
 -- data type holding coordinates
 data Location = Location {x :: Int, y :: Int, z :: Int}
@@ -151,3 +153,62 @@ renderModel m = "[\n" ++ bricks m ++ "\n]"
 		bricks [] = ""
 		bricks ls = intercalate ",\n" (map renderBrick ls)
 		renderBrick b = "\t(" ++ ( show $ x $ loc b ) ++ ", " ++ ( show $ y $ loc b ) ++ ", " ++ ( show $ z $ loc b ) ++ ")"
+
+-- Generate a bitstring representation of an Int16
+bitString :: Int16 -> String
+bitString a = intercalate "" [ if testBit a x then "1" else "0" | x <- [13,12..0]]
+
+-- helper for encoding locations into numbers
+-- tuple first two are for coordinates, the third
+-- is the value for the taken spots
+locEncode :: [(Int, Int, Int)]
+locEncode = [
+	(-1, 1, 4),
+	(0, 1, 12),
+	(1, 1, 8),
+	(-1, 0, 5),
+	(0, 0, 15),
+	(1, 0, 6),
+	(-1, -1, 1),
+	(0, -1, 3),
+	(1, -1, 2)
+	]
+
+-- part of number for brick in Model
+numberPart :: Brick -> (Brick -> [Location]) -> Model -> (Int, Int)
+numberPart _ _ [] = (0, 0)
+numberPart b f m = (t, c)
+	where
+		ml = fromList $ origs m
+		cp = fromList $ f b
+		bricks = toList $ intersection ml cp
+		c = length bricks
+		t = sum [s | tl <- bricks, (x1, y1) <- [(x tl, y tl)],
+				(x', y') <- [(x $ loc b, y $ loc b)], (lx, ly, s) <- locEncode, lx ==(x1-x') && ly == (y1-y')]
+
+numberBrick :: Brick -> Model -> Int16
+numberBrick _ [] = 0
+numberBrick b m = fromIntegral ( (shift topcount 11) + ( shift top 7 ) + ( shift bottom 3 ) + bottomcount )
+	where
+		(top, topcount) = numberPart b topConnectionPoints m
+		(bottom, bottomcount) = numberPart b bottomConnectionPoints m
+
+-- Generate numbers of a Model
+numbersModel :: Model -> [Int16]
+numbersModel [] = []
+numbersModel m = [ numberBrick b m | b <- m ]
+
+-- Generate bitstrings for a Model
+bitStringsModel :: Model -> [String]
+bitStringsModel [] = []
+bitStringsModel m = [ bitString i | i <- numbersModel m ]
+
+-- Vector tuples for a Model
+vectorsModel :: Model -> [(Int, Int, Int)]
+vectorsModel [] = []
+vectorsModel m = [(x l, y l, z l) | l <- origs m]
+
+--gen = mkStdGen(1)
+--ms = models' gen 100 10 []
+--m = ms !! 98
+--b = m !! 5

@@ -1,9 +1,10 @@
 module Brick ( models, renderModel, vectors, numbers, bitStrings ) where
 
+import Debug.Trace
+
 import Data.Set ( fromList, toList, difference, intersection )
 import Data.List ( intercalate, sort )
-import Data.Bits ( shift, testBit )
-import Data.Int ( Int16 )
+import Data.Bits ( popCount, (.&.), shift, testBit )
 import System.Random ( mkStdGen, StdGen, randomR, next )
 
 -- data type holding coordinates
@@ -141,12 +142,84 @@ _numberPart b f m = (t, c)
 				(x', y') <- [(x $ loc b, y $ loc b)], (lx, ly, s) <- _baseLocations, lx ==(x1-x') && ly == (y1-y')]
 
 -- Number for a Brick in Model
-_numberBrick :: Brick -> Model -> Int16
+_numberBrick :: Brick -> Model -> Int
 _numberBrick _ [] = 0
 _numberBrick b m = fromIntegral ( (shift topcount 11) + ( shift top 7 ) + ( shift bottom 3 ) + bottomcount )
 	where
 		(top, topcount) = _numberPart b _topConnectionPoints m
 		(bottom, bottomcount) = _numberPart b _bottomConnectionPoints m
+
+-- Test patterns
+_testPatterns :: [(Int, [Int])]
+_testPatterns = [
+	(0, []),
+	(1, [8]),
+	(2, [4]),
+	(3, [12, 8, 4]),
+	(4, [2]),
+	(5, [10, 8, 2]),
+	(6, [4, 2]),
+	(7, [12, 10, 8, 4, 2]),
+	(8, [1]),
+	(9, [1, 8]),
+	(10, [5, 4, 1]),
+	(11, [12, 8, 5, 4, 1]),
+	(12, [3, 2, 1]),
+	(13, [10, 8, 3, 2, 1]),
+	(14, [5, 3, 4, 2, 1]),
+	(15, [15, 12, 10, 8, 5, 4, 3, 2, 1])
+	]
+
+-- Return element at i and rest of list
+_nxt :: Int -> [Int] -> (Int, [Int])
+_nxt i n = (n !! i, take i n ++ drop (i + 1) n)
+
+-- get the bottom config of a brick
+-- fst is positions, snd is count
+_bottom :: Int -> (Int, Int)
+_bottom b = ((.&.) (shift b (-3)) 15, (.&.) b 7)
+
+
+-- get the top config of a brick
+-- fst is positions, snd is count
+_top :: Int -> (Int, Int)
+_top b = ((.&.) (shift b (-7)) 15, (.&.) (shift b (-11)) 7)
+
+
+-- helper for match check
+_fitmatch :: Int -> Int -> Bool
+_fitmatch a b = or [True | (t, ss) <- _testPatterns, x <- ss, t==a, x==b]
+
+-- check if topbrick could fit on top of brick
+-- not checking counts
+_couldFitOnTop :: Int -> Int -> Bool
+_couldFitOnTop topbrick brick = w
+	where
+		-- get bottom config of top brick
+		(b, _) = _bottom topbrick
+		-- get top config of bottom brick
+		(a, _) = _top brick
+		w = _fitmatch a b
+
+-- check if bottombrick could fit on bottom of Brick
+-- not checking counts
+_couldFitOnBottom :: Int -> Int -> Bool
+_couldFitOnBottom bottombrick brick = w
+	where
+		(b, _) = _top bottombrick
+		(a, _) = _bottom brick
+		w = _fitmatch a b
+
+-- Possible fits, fst is top connections, snd is bottom connections
+_possible :: Int -> [Int] -> ([Int], [Int])
+_possible b n = (tops, bottoms)
+	where
+		tops = {-trace ("top count: " ++ show ( tcount ) ++ " pop top: " ++ show( poptop) )-} [t | t <- n, _couldFitOnTop t b]
+		bottoms = {-trace ("bottom count: " ++ show ( bcount ) ++ "pop bottom: " ++ show (popbottom) )-} [t | t <- n, _couldFitOnBottom t b]
+		(tconf, tcount) = _top b
+		poptop = popCount tconf
+		(bconf, bcount) = _bottom b
+		popbottom = popCount bconf
 
 
 -- Generate c models of n bricks into list m of Models
@@ -168,15 +241,17 @@ renderModel m = "[\n" ++ bricks m ++ "\n]"
 
 
 -- Generate numbers of a Model
-numbers :: Model -> [Int16]
+numbers :: Model -> [Int]
 numbers [] = []
 numbers m = [ _numberBrick b m | b <- m ]
 
+-- Generate a bitstring representation of an Int
+bitString4 :: Int -> String
+bitString4 a = intercalate "" [ if testBit a x then "1" else "0" | x <- [3,2,1,0]]
 
--- Generate a bitstring representation of an Int16
-bitString :: Int16 -> String
+-- Generate a bitstring representation of an Int
+bitString :: Int -> String
 bitString a = intercalate "" [ if testBit a x then "1" else "0" | x <- [13,12..0]]
-
 
 -- Generate bitstrings for a Model
 bitStrings :: Model -> [String]
@@ -189,7 +264,11 @@ vectors :: Model -> [(Int, Int, Int)]
 vectors [] = []
 vectors m = [(x l, y l, z l) | l <- _origins m]
 
+
 gen = mkStdGen(1)
 ms = models gen 100 10 []
 m = ms !! 98
+n = numbers m
+p = [_possible a b | (a,b) <- [_nxt i n | i <- [0..length n - 1]]]
+bs = bitStrings m
 --b = m !! 5

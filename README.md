@@ -71,11 +71,12 @@ Software Features
 
 * Generate models
 * Output brick locations
+* Generate numbers for bricks in a model
+* Generate bit strings for bricks in a model
 
 Roadmap
 -------
 
-* Generate numbers for bricks in a model
 * Solver for collection of numbers
 * Direct visualisation
 * Game mode

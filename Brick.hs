@@ -254,9 +254,16 @@ bitString :: Int -> String
 bitString a = intercalate "" [ if testBit a x then "1" else "0" | x <- [13,12..0]]
 
 -- Generate bitstrings for a Model
-bitStrings :: Model -> [String]
-bitStrings [] = []
-bitStrings m = [ bitString i | i <- numbers m ]
+class BitString a where
+	bitStrings :: [a] -> [String]
+
+instance BitString Int where
+	bitStrings [] = []
+	bitStrings m = [ bitString i | i <- m ]
+
+instance BitString Brick where
+	bitStrings [] = []
+	bitStrings m = [ bitString i | i <- numbers m ]
 
 
 -- Vector tuples for a Model

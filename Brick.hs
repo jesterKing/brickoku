@@ -115,6 +115,19 @@ _model' rgen m n = do
 		else
 			reverse m1
 
+-- Simple helper for translating a Brick
+_translate :: Brick -> (Int, Int, Int) -> Brick
+_translate b (tx,ty,tz) = Brick $ Location ((x $ loc b) - tx) ((y $ loc b) - ty) ((z $ loc b) - tz)
+
+-- Move Model to the first quadrant (all values >= 0)
+_toFirstQuadrant :: Model -> Model
+_toFirstQuadrant [] = []
+_toFirstQuadrant m = [_translate brick trans | brick <- m]
+	where
+		ls = vectors m
+		trans = (minimum [x|(x,_,_) <- ls], minimum [y|(_,y,_) <- ls],
+						minimum [z|(_,_,z) <- ls])
+
 -- Part of number for brick in Model
 _numberPart :: Brick -> (Brick -> [Location]) -> Model -> (Int, Int)
 _numberPart _ _ [] = (0, 0)
@@ -140,7 +153,7 @@ _numberBrick b m = fromIntegral ( (shift topcount 11) + ( shift top 7 ) + ( shif
 models :: StdGen -> Int -> Int -> Model -> [Model]
 models rgen count brickcount ms
 	| count <= 0 = []
-	| otherwise = [_model' rgen [] brickcount] ++ models rgen2 (count-1) brickcount ms
+	| otherwise = [_toFirstQuadrant $ _model' rgen [] brickcount] ++ models rgen2 (count-1) brickcount ms
 		where
 			(x, rgen2) = next rgen
 
@@ -176,7 +189,7 @@ vectors :: Model -> [(Int, Int, Int)]
 vectors [] = []
 vectors m = [(x l, y l, z l) | l <- _origins m]
 
---gen = mkStdGen(1)
---ms = models gen 100 10 []
---m = ms !! 98
+gen = mkStdGen(1)
+ms = models gen 100 10 []
+m = ms !! 98
 --b = m !! 5

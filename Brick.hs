@@ -278,4 +278,8 @@ m = ms !! 98
 n = numbers m
 p = [_possible a b | (a,b) <- [_nxt i n | i <- [0..length n - 1]]]
 bs = bitStrings m
+
+challenge = [122, 2769, 2769, 2809, 3369, 3369, 3449, 4009, 4049, 6016]
+pchallenge = [_possible a b | (a,b) <- [_nxt i challenge | i <- [0..length challenge - 1]]]
+bschallenge = bitStrings challenge
 --b = m !! 5

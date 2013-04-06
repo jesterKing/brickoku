@@ -1,4 +1,5 @@
-brickudo-game
+brickodu-game
 *.hi
 *.o
 *.exe
+models.txt

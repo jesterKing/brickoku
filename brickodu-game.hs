@@ -30,6 +30,7 @@ main = do
 						",\n\t" ++ show (bitStrings m) ++ "\n)" | m <- ms ]
 
 	-- output the models
+	putStrLn ("# VERSION = 0.0.1")
 	putStrLn ("seed = " ++ show(seed))
 	putStrLn ("bricks_per_model = " ++ show(brick_count))
 	putStrLn ("model_count = " ++ show(model_count))

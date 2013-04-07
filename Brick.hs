@@ -15,6 +15,12 @@ data Location = Location {x :: Int, y :: Int, z :: Int}
 data Brick = Brick { loc :: Location }
 	deriving (Show, Ord, Eq)
 
+-- data type representing a brick during solving
+data SolverBrick = SolverBrick { id :: Int, number :: Int }
+	deriving (Show, Ord, Eq)
+
+type SolverModel = [SolverBrick]
+
 -- a model is a collection of bricks that are connected
 type Model = [Brick]
 
@@ -171,19 +177,19 @@ _testPatterns = [
 	]
 
 -- Return element at i and rest of list
-_nxt :: Int -> [Int] -> (Int, [Int])
+_nxt :: Int -> SolverModel -> (SolverBrick, SolverModel)
 _nxt i n = (n !! i, take i n ++ drop (i + 1) n)
 
 -- get the bottom config of a brick
 -- fst is positions, snd is count
-_bottom :: Int -> (Int, Int)
-_bottom b = ((.&.) (shift b (-3)) 15, (.&.) b 7)
+_bottom :: SolverBrick -> (Int, Int)
+_bottom b = ((.&.) (shift (number b) (-3)) 15, (.&.) (number b) 7)
 
 
 -- get the top config of a brick
 -- fst is positions, snd is count
-_top :: Int -> (Int, Int)
-_top b = ((.&.) (shift b (-7)) 15, (.&.) (shift b (-11)) 7)
+_top :: SolverBrick -> (Int, Int)
+_top b = ((.&.) (shift (number b) (-7)) 15, (.&.) (shift (number b) (-11)) 7)
 
 
 -- helper for match check
@@ -193,7 +199,7 @@ _fitmatch a b = or [True | (t, ss) <- _testPatterns, x <- ss, t==a, x==b]
 
 -- check if topbrick could fit on top of brick
 -- not checking counts
-_couldFitOnTop :: Int -> Int -> Bool
+_couldFitOnTop :: SolverBrick -> SolverBrick -> Bool
 _couldFitOnTop topbrick brick = w
 	where
 		-- get bottom config of top brick
@@ -205,7 +211,7 @@ _couldFitOnTop topbrick brick = w
 
 -- check if bottombrick could fit on bottom of Brick
 -- not checking counts
-_couldFitOnBottom :: Int -> Int -> Bool
+_couldFitOnBottom :: SolverBrick -> SolverBrick -> Bool
 _couldFitOnBottom bottombrick brick = w
 	where
 		(b, _) = _top bottombrick
@@ -213,7 +219,7 @@ _couldFitOnBottom bottombrick brick = w
 		w = _fitmatch a b
 
 -- Possible fits, fst is top connections, snd is bottom connections
-_possible :: Int -> [Int] -> ([Int], [Int])
+_possible :: SolverBrick -> SolverModel -> (SolverModel, SolverModel)
 _possible b n = (tops, bottoms)
 	where
 		tops = {-trace ("top count: " ++ show ( tcount ) ++ " pop top: " ++ show( poptop) )-} [t | t <- n, _couldFitOnTop t b]
@@ -280,10 +286,12 @@ gen = mkStdGen(1)
 ms = models gen 100 10 []
 m = ms !! 98
 n = numbers m
-p = [_possible a b | (a,b) <- [_nxt i n | i <- [0..length n - 1]]]
+nsb = [ SolverBrick i nr | (i, nr) <- zip [0..] n]
+p = [_possible a b | (a,b) <- [_nxt i nsb | i <- [0..length nsb - 1]]]
 bs = bitStrings m
 
 -- big-O challenge
 challenge = [122, 2769, 2769, 2809, 3369, 3369, 3449, 4009, 4049, 6016]
-pchallenge = [_possible a b | (a,b) <- [_nxt i challenge | i <- [0..length challenge - 1]]]
+sbchallenge = [SolverBrick i nr | (i, nr) <- zip [0..] challenge]
+pchallenge = [_possible a b | (a,b) <- [_nxt i sbchallenge | i <- [0..length sbchallenge - 1]]]
 bschallenge = bitStrings challenge

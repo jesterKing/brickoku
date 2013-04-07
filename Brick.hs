@@ -190,6 +190,7 @@ _top b = ((.&.) (shift b (-7)) 15, (.&.) (shift b (-11)) 7)
 _fitmatch :: Int -> Int -> Bool
 _fitmatch a b = or [True | (t, ss) <- _testPatterns, x <- ss, t==a, x==b]
 
+
 -- check if topbrick could fit on top of brick
 -- not checking counts
 _couldFitOnTop :: Int -> Int -> Bool
@@ -200,6 +201,7 @@ _couldFitOnTop topbrick brick = w
 		-- get top config of bottom brick
 		(a, _) = _top brick
 		w = _fitmatch a b
+
 
 -- check if bottombrick could fit on bottom of Brick
 -- not checking counts
@@ -257,10 +259,12 @@ bitString a = intercalate "" [ if testBit a x then "1" else "0" | x <- [13,12..0
 class BitString a where
 	bitStrings :: [a] -> [String]
 
+-- Bitstrings for a list of Ints
 instance BitString Int where
 	bitStrings [] = []
 	bitStrings m = [ bitString i | i <- m ]
 
+-- Bitstring for a list of Bricks ( a Model)
 instance BitString Brick where
 	bitStrings [] = []
 	bitStrings m = [ bitString i | i <- numbers m ]

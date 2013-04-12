@@ -1,7 +1,7 @@
-Brickodu
+Brickoku
 ========
 
-This is code related to the Brickodu game, an orginal puzzle game developed by 
+This is code related to the Brickoku game, an orginal puzzle game developed by 
 Nathan Letwory.
 
 The game is to build a brick model based on 10 numbers. The numbers encode each
@@ -84,31 +84,31 @@ Roadmap
 Compiling
 =========
 
-ghc -o brickodu-game -O brickodu-game.hs
+ghc -o brickoku-game -O brickoku-game.hs
 
 Usage
 =====
 
-	./brickodu-game [[[seed] brick_count] count]
+	./brickoku-game [[[seed] brick_count] count]
 
 When `seed` is not specified a random seed will be picked. `count` tells how
 many model iterations will be created.
 
 ### a random model with 10 bricks
 
-	./brickodu-game
+	./brickoku-game
 
 ### 5 models with a random seed, 10 bricks
 
-	./brickodu-game 5
+	./brickoku-game 5
 
 ### 1 model with a specific seed, 10 bricks
 
-	./brickodu-game 1337 10 1
+	./brickoku-game 1337 10 1
 
 ### 5 models with a specific seed, 20 bricks
 
-	./brickodu-game 7331 20 5
+	./brickoku-game 7331 20 5
 
 Credits
 =======

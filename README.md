@@ -84,12 +84,12 @@ Roadmap
 Compiling
 =========
 
-ghc -o brickoku-game -O brickoku-game.hs
+ghc -o brickoku-game -O -threaded -rtsopts brickoku-game.hs
 
 Usage
 =====
 
-	./brickoku-game [[[seed] brick_count] count]
+	./brickoku-game [[[seed] brick_count] count] [+RTS rtsopts]
 
 When `seed` is not specified a random seed will be picked. `count` tells how
 many model iterations will be created.
@@ -109,6 +109,10 @@ many model iterations will be created.
 ### 5 models with a specific seed, 20 bricks
 
 	./brickoku-game 7331 20 5
+
+### start with 3 threads, extra output
+
+	./brickoku-game 7331 20 5 +RTS -sstderr -N3
 
 Credits
 =======

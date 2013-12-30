@@ -1,4 +1,5 @@
-module Brick ( models, renderModel, vectors, numbers, bitStrings ) where
+module Brick ( models, renderModel, vectors, numbers, bitStrings, bschallenge, challenge, sbchallenge, pchallenge, renderPossibles) where
+
 
 import Debug.Trace
 
@@ -247,6 +248,14 @@ renderModel m = "[\n" ++ bricks m ++ "\n]"
 		bricks ls = intercalate ",\n" (map renderBrick ls)
 		renderBrick b = "\t(" ++ ( show $ x $ loc b ) ++ ", " ++ ( show $ y $ loc b ) ++ ", " ++ ( show $ z $ loc b ) ++ ")"
 
+-- Generate a string representation of possible fits
+renderPossibles :: [(SolverModel, SolverModel)] -> String
+renderPossibles xX = "" ++ potentials xX ++ "\n"
+	where
+		potentials [] = ""
+		potentials ls = intercalate ",\n" (map renderPotential ls)
+		renderPotential (t, b) = "tops: " ++ show ( t ) ++ "\nbottoms:" ++ show ( b ) ++ "\n"
+
 
 -- Generate numbers of a Model
 numbers :: Model -> [Int]
@@ -282,16 +291,18 @@ vectors [] = []
 vectors m = [(x l, y l, z l) | l <- _origins m]
 
 
-gen = mkStdGen(1)
-ms = models gen 100 10 []
-m = ms !! 98
-n = numbers m
-nsb = [ SolverBrick i nr | (i, nr) <- zip [0..] n]
-p = [_possible a b | (a,b) <- [_nxt i nsb | i <- [0..length nsb - 1]]]
-bs = bitStrings m
+-- gen = mkStdGen(1)
+-- ms = models gen 100 10 []
+-- m = ms !! 98
+-- n = numbers m
+-- nsb = [ SolverBrick i nr | (i, nr) <- zip [0..] n]
+-- p = [_possible a b | (a,b) <- [_nxt i nsb | i <- [0..length nsb - 1]]]
+-- bs = bitStrings m
 
 -- big-O challenge
 challenge = [122, 2769, 2769, 2809, 3369, 3369, 3449, 4009, 4049, 6016]
 sbchallenge = [SolverBrick i nr | (i, nr) <- zip [0..] challenge]
 pchallenge = [_possible a b | (a,b) <- [_nxt i sbchallenge | i <- [0..length sbchallenge - 1]]]
 bschallenge = bitStrings challenge
+
+

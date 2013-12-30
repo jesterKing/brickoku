@@ -234,7 +234,7 @@ _possible b n = (tops, bottoms)
 models :: StdGen -> Int -> Int -> Model -> [Model]
 models rgen count brickcount ms
 	| count <= 0 = []
-	| otherwise = [_toFirstQuadrant $ _model' rgen [] brickcount] ++ models rgen2 (count-1) brickcount ms
+	| otherwise = (++) ([_toFirstQuadrant $ _model' rgen [] brickcount]) (models rgen2 (count-1) brickcount ms)
 		where
 			(x, rgen2) = next rgen
 

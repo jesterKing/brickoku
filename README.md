@@ -123,7 +123,6 @@ and using lego bricks.
 Further
 =======
 
-This project serves as a personal learning platform for the Haskell
-language.
+This project serves as a personal learning platform for functional programming.
 
 
